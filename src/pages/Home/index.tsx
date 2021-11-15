@@ -1,6 +1,7 @@
 /** @format */
 
 import { useState } from 'react';
+import Button from '../../components/Button';
 import Container from '../../components/Container';
 import Header from '../../components/Header';
 import { HomeStyled } from './styles';
@@ -19,7 +20,7 @@ export default function Home() {
 					onChange={(e) => setAmountQuestion(+e.target.value)}
 					type='number'
 				/>
-				<button>Feito</button>
+				<Button backgroundColor='var(--yellow)' padding={"5px 110px"}>Feito</Button>
 			</Container>
 		</HomeStyled>
 	);

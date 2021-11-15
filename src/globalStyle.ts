@@ -9,6 +9,7 @@ export const StyledGlobal = createGlobalStyle`
   --blue: #65B2DD;
   --yellow: #C8B934;
   --white: #E5E5E5;
+  --red: #C83D34;
  }
 
 * {
