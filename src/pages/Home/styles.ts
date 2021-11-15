@@ -9,7 +9,7 @@ export const HomeStyled = styled.div`
 	align-items: center;
 
 	& > div {
-		width: 60%;
+		width: 100%;
 		max-width: 500px;
 		display: flex;
 		flex-direction: column;
@@ -26,26 +26,32 @@ export const HomeStyled = styled.div`
 			border: none;
 			height: 35px;
 			width: 80%;
+			min-width: 250px;
 			padding: 5px 0;
 			font-weight: 700;
 			font-size: 1.5rem;
 			text-align: center;
-			color: var(--colorContainer)
+			color: var(--colorContainer);
+			background-color: var(--white);
 		}
 
 		button {
-			margin-top: 50px;
-			height: 30px;
-			background-color: var(--yellow);
+			margin-top: 50px;  /*remover quando componentizar */
+			background-color: var(--yellow);  /*remover quando componentizar */
 			border: none;
 			border-radius: 20px;
-			padding: 20px 110px;
-			color: var(--white);
+			padding: 5px 110px;  /*verificar quando componentizar */
+			color: var(--white);  /*verificar quando componentizar */
 			font-size: 1.1rem;
 			font-weight: 700;
 			display: flex;
 			justify-content: center;
 			align-items: center;
+			transition: all 0.2s;
+
+			&:hover {
+				filter: brightness(0.9);
+			}
 		}
 	}
 `;
