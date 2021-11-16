@@ -5,9 +5,15 @@ import Button from '../../components/Button';
 import Container from '../../components/Container';
 import Header from '../../components/Header';
 import { HomeStyled } from './styles';
+import { useNavigate } from 'react-router-dom';
 
 export default function Home() {
+	const navigate = useNavigate();
 	const [amoutQuestion, setAmountQuestion] = useState(10);
+
+	function handleConfirm() {
+		navigate(`/confirmar/${amoutQuestion}`);
+	}
 	return (
 		<HomeStyled>
 			<Header />
@@ -20,7 +26,13 @@ export default function Home() {
 					onChange={(e) => setAmountQuestion(+e.target.value)}
 					type='number'
 				/>
-				<Button backgroundColor='var(--yellow)' padding={"5px 110px"}>Feito</Button>
+
+				<Button
+					onHandleRedirect={handleConfirm}
+					backgroundColor='var(--yellow)'
+					padding={'5px 110px'}>
+					Feito
+				</Button>
 			</Container>
 		</HomeStyled>
 	);

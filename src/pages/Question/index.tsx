@@ -1,22 +1,23 @@
 /** @format */
 
+import Answers from '../../components/Answers';
 import Button from '../../components/Button';
 import Container from '../../components/Container';
 import Header from '../../components/Header';
-import Options from '../../components/Options';
+import { useQuestion } from '../../context/QuestionsContext';
+
 import { ButtonPosition, QuestionStyled } from './styles';
 
 export default function Question() {
+	const question = useQuestion();
+
 	return (
 		<QuestionStyled>
 			<Header />
 			<Container>
-				<h2>Pergunta 1</h2>
-				<p>Which of these is not a member of the virtual band Gorillaz?</p>
-				<Options>Phi Cypher</Options>
-				<Options>Phi Cypher</Options>
-				<Options>Phi Cypher</Options>
-				<Options>Phi Cypher</Options>
+				<h2>Pergunta </h2>
+				<p>{question.question}</p>
+				<Answers />
 
 				<ButtonPosition>
 					<Button backgroundColor='var(--red)' padding='5px 50px'>

@@ -7,16 +7,20 @@ interface ButtonProps {
 	children: ReactChild;
 	backgroundColor: string;
 	padding: string;
-	style?: HTMLButtonElement;
+	onHandleRedirect?: () => void;
 }
 
 export default function Button({
 	children,
 	backgroundColor,
 	padding,
+	onHandleRedirect,
 }: ButtonProps) {
 	return (
-		<ButtonStyled backgroundColor={backgroundColor} padding={padding}>
+		<ButtonStyled
+			onClick={onHandleRedirect}
+			backgroundColor={backgroundColor}
+			padding={padding}>
 			{children}
 		</ButtonStyled>
 	);
