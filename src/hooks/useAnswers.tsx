@@ -11,7 +11,9 @@ interface AnswersType {
 }
 
 export function useAnswers() {
-	const { incorrect_answers, correct_answer } = useQuestion();
+	const { question } = useQuestion();
+	const { incorrect_answers, correct_answer } = question;
+
 	const [answers, setAnswers] = useState<AnswersType[]>([]);
 
 	const settingAnswers = useCallback((answersCustom: Array<string>) => {

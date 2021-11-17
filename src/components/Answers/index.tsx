@@ -14,7 +14,7 @@ export default function Answers() {
 	const { answers, setAnswers } = useAnswers();
 
 	// Selecionando Resposta
-	function handleClick(id: number) {
+	function handleSetSelected(id: number) {
 		const newAnswers: AnswersType[] = answers.map((answer) => {
 			if (answer.id === id) {
 				answer.isSelect = !answer.isSelect;
@@ -37,7 +37,7 @@ export default function Answers() {
 					onSelected={answer.isSelect}
 					key={answer.id}
 					onHandleClick={() => {
-						handleClick(answer.id);
+						handleSetSelected(answer.id);
 					}}>
 					{answer.text}
 				</Options>

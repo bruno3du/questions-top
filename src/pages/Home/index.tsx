@@ -28,7 +28,7 @@ export default function Home() {
 				/>
 
 				<Button
-					onHandleRedirect={handleConfirm}
+					onHandleClick={handleConfirm}
 					backgroundColor='var(--yellow)'
 					padding={'5px 110px'}>
 					Feito

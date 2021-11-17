@@ -9,7 +9,16 @@ import { useQuestion } from '../../context/QuestionsContext';
 import { ButtonPosition, QuestionStyled } from './styles';
 
 export default function Question() {
-	const question = useQuestion();
+	const { previousQuestion, nextQuestion } = useQuestion();
+	const { question } = useQuestion();
+
+	function handlePreviousQuestion() {
+		previousQuestion();
+	}
+
+	function handleNextQuestion() {
+		nextQuestion();
+	}
 
 	return (
 		<QuestionStyled>
@@ -17,14 +26,20 @@ export default function Question() {
 			<Container>
 				<h2>{question.category} </h2>
 				<p>{question.question}</p>
-				
+
 				<Answers />
 
 				<ButtonPosition>
-					<Button backgroundColor='var(--red)' padding='5px 50px'>
+					<Button
+						onHandleClick={handlePreviousQuestion}
+						backgroundColor='var(--red)'
+						padding='5px 50px'>
 						Previous
 					</Button>
-					<Button backgroundColor='var(--yellow)' padding='5px 68px'>
+					<Button
+						onHandleClick={handleNextQuestion}
+						backgroundColor='var(--yellow)'
+						padding='5px 68px'>
 						Next
 					</Button>
 				</ButtonPosition>
