@@ -15,8 +15,9 @@ export default function Question() {
 		<QuestionStyled>
 			<Header />
 			<Container>
-				<h2>Pergunta </h2>
+				<h2>{question.category} </h2>
 				<p>{question.question}</p>
+				
 				<Answers />
 
 				<ButtonPosition>
