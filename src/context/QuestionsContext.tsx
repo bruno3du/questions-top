@@ -1,116 +1,166 @@
 /** @format */
 
 import {
-	createContext,
-	ReactNode,
-	useCallback,
-	useContext,
-	useEffect,
-	useState,
-} from 'react';
-import { api } from '../services/api';
+  createContext,
+  ReactNode,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
+import { answerModel } from "../model/answerModel";
+import { useLocalStorage } from "../hooks/useLocalstorage";
+import { api } from "../services/api";
 
 interface QuestionProviderProps {
-	children: ReactNode;
+  children: ReactNode;
 }
 
 interface Question {
-	category: string;
-	type: string;
-	difficulty: string;
-	question: string;
-	correct_answer: string;
-	incorrect_answers: Array<string>;
+  category: string;
+  type: string;
+  difficulty: string;
+  question: string;
+  correct_answer: string;
+  incorrect_answers: Array<string>;
+}
+
+interface AnswersType {
+  text: string;
+  isSelect: boolean;
+  isCorrect: boolean;
+  id: number;
+}
+
+interface NewQuestionType {
+  question: string;
+  category: string;
+  options: AnswersType[];
 }
 
 interface CustomQuestionFunction {
-	question: Question;
-	nextQuestion: () => void;
-	previousQuestion: () => void;
+  question: NewQuestionType;
+  nextQuestion: () => void;
+  previousQuestion: () => void;
 }
 
 export const QuestionsContext = createContext({} as CustomQuestionFunction);
 
 export function QuestionProvider({ children }: QuestionProviderProps) {
-	const [fetchQuestions, setFetchQuestions] = useState<Question[]>();
-	const [question, setQuestion] = useState({} as Question);
+  const [fetchQuestions, setFetchQuestions] = useState([] as Question[]);
+  const [question, setQuestion] = useState({} as NewQuestionType);
+  const [newListQuestion, setNewListQuestion] = useLocalStorage(
+    "questoes",
+    [] as NewQuestionType[]
+  );
 
-	const indexQuestion = useCallback(
-		(current: number = 0) => {
-			if (fetchQuestions) return fetchQuestions[current];
-		},
-		[fetchQuestions]
-	);
+  const indexQuestion = useCallback(
+    (current: number = 0) => {
+      if (newListQuestion) return newListQuestion[current];
+    },
+    [newListQuestion]
+  );
 
-	// Buscando as questões na API
+  const newListQuestionModel = useCallback(() => {
+    return fetchQuestions.map((question) => {
+      // Função modelar respostas e retornar um array completo
 
-	useEffect(() => {
-		api(`api.php?amount=${10}&type=multiple`).then((res) =>
-			setFetchQuestions(res.data.results)
-		);
-	}, []);
+      const answers = answerModel(
+        question.correct_answer,
+        question.incorrect_answers
+      );
 
-	useEffect(() => {
-		if (fetchQuestions) {
-			const customQuestionIndex = indexQuestion();
-			if (customQuestionIndex) setQuestion(customQuestionIndex);
-		}
-	}, [fetchQuestions, indexQuestion]);
+      if (!answers) {
+        return question;
+      }
 
-	function nextQuestion() {
-	//Previnir inexistencia de fetchQuestions
-	if (!fetchQuestions) return;
+      return {
+        question: question.question,
+        category: question.category,
+        options: answers,
+      };
+    });
+  }, [fetchQuestions]);
 
-	//Setando elemento atual
-	const customQuestionIndex = question;
+  // Buscando as questões na API
+  useEffect(() => {
+    if (newListQuestion.length > 0) {
+      return;
+    }
+    api(`api.php?amount=${10}&type=multiple`).then((res) =>
+      setFetchQuestions(res.data.results)
+    );
+  }, [newListQuestion]);
 
-	//Previnir inexistencia de customQuestionIndex
-	if (!customQuestionIndex) return;
+  useEffect(() => {
+    // tranformando dados da api em novo objeto
+    const newList = newListQuestionModel();
+    if (newList) {
+      console.log(newList);
+      setNewListQuestion(newList as NewQuestionType[]);
+    }
+  }, [newListQuestionModel]);
 
-	// Verificando index Atual
-	const indexAtual = fetchQuestions.indexOf(customQuestionIndex);
+  useEffect(() => {
+    // Settando primeira questão
+    if (newListQuestion.length !== 0) {
+      const customQuestionIndex = indexQuestion(); // indexQuestion tem index 0 por padrão
+      if (customQuestionIndex) setQuestion(customQuestionIndex);
+    }
+  }, [newListQuestion, indexQuestion]);
 
-	// Setando Nova Questão pelo index.
-	const newQuestion = indexQuestion(indexAtual + 1);
+  function nextQuestion() {
+    //Previnir inexistencia de newListQuestion
+    if (!newListQuestion) return;
 
-	// Se newQuestion for verdadeiro, ele retorna nova questão
-	if (newQuestion) setQuestion(newQuestion);
+    //Setando elemento atual
+    const customQuestionIndex = question;
 
-	console.log(newQuestion);
-	}
+    //Previnir inexistencia de customQuestionIndex
+    if (!customQuestionIndex) return;
 
-	function previousQuestion() {
-		//Previnir inexistencia de fetchQuestions
-		if (!fetchQuestions) return;
+    // Verificando index Atual
+    const indexAtual = newListQuestion.indexOf(customQuestionIndex);
+    console.log(newListQuestion);
 
-		//Setando elemento atual
-		const customQuestionIndex = question;
+    // Setando Nova Questão pelo index.
+    const newQuestion = indexQuestion(indexAtual + 1);
 
-		//Previnir inexistencia de customQuestionIndex
-		if (!customQuestionIndex) return;
+    // Se newQuestion for verdadeiro, ele retorna nova questão
+    if (newQuestion) setQuestion(newQuestion);
+  }
 
-		// Verificando index Atual
-		const indexAtual = fetchQuestions.indexOf(customQuestionIndex);
+  function previousQuestion() {
+    //Previnir inexistencia de fetchQuestions
+    if (!newListQuestion) return;
 
-		// Setando Nova Questão pelo index.
-		const newQuestion = indexQuestion(indexAtual - 1);
+    //Setando elemento atual
+    const customQuestionIndex = question;
 
-		// Se newQuestion for verdadeiro, ele retorna nova questão
-		if (newQuestion) setQuestion(newQuestion);
+    //Previnir inexistencia de customQuestionIndex
+    if (!customQuestionIndex) return;
 
-		console.log(newQuestion);
-	}
+    // Verificando index Atual
+    const indexAtual = newListQuestion.indexOf(customQuestionIndex);
 
-	return (
-		<QuestionsContext.Provider
-			value={{ question, previousQuestion, nextQuestion }}>
-			{children}
-		</QuestionsContext.Provider>
-	);
+    // Setando Nova Questão pelo index.
+    const newQuestion = indexQuestion(indexAtual - 1);
+
+    // Se newQuestion for verdadeiro, ele retorna nova questão
+    if (newQuestion) setQuestion(newQuestion);
+  }
+
+  return (
+    <QuestionsContext.Provider
+      value={{ question, previousQuestion, nextQuestion }}
+    >
+      {children}
+    </QuestionsContext.Provider>
+  );
 }
 
 export function useQuestion() {
-	const question = useContext<CustomQuestionFunction>(QuestionsContext);
+  const question = useContext<CustomQuestionFunction>(QuestionsContext);
 
-	return question;
+  return question;
 }
