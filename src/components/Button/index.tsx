@@ -1,27 +1,28 @@
 /** @format */
 
-import { ReactChild } from 'react';
-import { ButtonStyled } from './styles';
+import { ReactChild } from "react";
+import { ButtonStyled } from "./styles";
 
 interface ButtonProps {
-	children: ReactChild;
-	backgroundColor: string;
-	padding: string;
-	onHandleClick?: () => void;
+  children: ReactChild;
+  backgroundColor: string;
+  padding: string;
+  onHandleClick?: () => void;
 }
 
 export default function Button({
-	children,
-	backgroundColor,
-	padding,
-	onHandleClick,
+  children,
+  backgroundColor,
+  padding,
+  onHandleClick,
 }: ButtonProps) {
-	return (
-		<ButtonStyled
-			onClick={onHandleClick}
-			backgroundColor={backgroundColor}
-			padding={padding}>
-			{children}
-		</ButtonStyled>
-	);
+  return (
+    <ButtonStyled
+      onClick={onHandleClick}
+      backgroundColor={backgroundColor}
+      padding={padding}
+    >
+      {children}
+    </ButtonStyled>
+  );
 }

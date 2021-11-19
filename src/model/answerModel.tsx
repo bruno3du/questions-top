@@ -1,6 +1,5 @@
 /** @format */
 
-
 interface AnswersType {
   text: string;
   isSelect: boolean;
@@ -12,12 +11,11 @@ export function answerModel(
   correctAnswer: string,
   incorrectAnswers: Array<string>
 ) {
-  
+
   //Chamando função principal
   const answers = joinAnswers();
 
   function settingAnswers(answersCustom: Array<string>) {
-
     const newAnswer = answersCustom.map((answer) => {
       return {
         text: answer,
@@ -30,7 +28,7 @@ export function answerModel(
   }
 
   function generateId() {
-    return Math.floor(Math.random() * 1000000);
+    return Math.floor(Math.random() * 10000000);
   }
 
   function joinAnswers() {
