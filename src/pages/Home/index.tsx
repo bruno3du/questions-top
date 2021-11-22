@@ -1,6 +1,6 @@
 /** @format */
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Button from "../../components/Button";
 import Container from "../../components/Container";
 import Header from "../../components/Header";
@@ -9,9 +9,16 @@ import { useNavigate } from "react-router-dom";
 import { useQuestion } from "../../context/QuestionsContext";
 
 export default function Home() {
-  const navigate = useNavigate();
   const [amountQuestion, setAmountQuestion] = useState(10);
-  const { startQuestion } = useQuestion();
+  const [isPlayAgain, setIsPlayAgain] = useState(false);
+  const { startQuestion, newListQuestion } = useQuestion();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (newListQuestion.length > 0) {
+      setIsPlayAgain(true);
+    }
+  }, [newListQuestion]);
 
   async function handleConfirm() {
     if (!amountQuestion) return;
@@ -20,7 +27,10 @@ export default function Home() {
     navigate(`/confirmar/${+amountQuestion}`);
   }
 
-  
+  function handleReport() {
+    navigate(`/resultado`);
+  }
+
   return (
     <HomeStyled>
       <Header />
@@ -41,6 +51,18 @@ export default function Home() {
         >
           Feito
         </Button>
+
+        {isPlayAgain && (
+          <div>
+            <Button
+              onHandleClick={handleReport}
+              backgroundColor="#4BCD77"
+              padding={"8px 70px"}
+            >
+              Ver meu ultimo resultado
+            </Button>
+          </div>
+        )}
       </Container>
     </HomeStyled>
   );

@@ -41,24 +41,25 @@ interface NewQuestionType {
 
 interface CustomQuestionFunction {
   question: NewQuestionType;
+  newListQuestion: NewQuestionType[];
+  isFinished: boolean;
   nextQuestion: () => void;
   previousQuestion: () => void;
   startQuestion: (amount: number) => void;
   setSelected: (id: number) => void;
+  setCurrentQuestion: () => void;
 }
 
 export const QuestionsContext = createContext({} as CustomQuestionFunction);
 
 export function QuestionProvider({ children }: QuestionProviderProps) {
   const [fetchQuestions, setFetchQuestions] = useState([] as Question[]);
-  const [question, setQuestion] = useLocalStorage(
-    "thisQuestion",
-    {} as NewQuestionType
-  );
+  const [question, setQuestion] = useState({} as NewQuestionType);
   const [newListQuestion, setNewListQuestion] = useLocalStorage(
     "questoes",
     [] as NewQuestionType[]
   );
+  const [isFinished, setIsFinished] = useState(false);
 
   const indexQuestion = useCallback(
     (current: number = 0) => {
@@ -96,9 +97,8 @@ export function QuestionProvider({ children }: QuestionProviderProps) {
   useEffect(() => {
     // tranformando dados da api em novo objeto
 
-    if (newListQuestion.length !== 0) {
-      return;
-    }
+    if (fetchQuestions.length <= 0) return;
+
     const newList = newListQuestionModel();
 
     if (newList) setNewListQuestion(newList as NewQuestionType[]);
@@ -106,40 +106,57 @@ export function QuestionProvider({ children }: QuestionProviderProps) {
     // eslint-disable-next-line
   }, [fetchQuestions]);
 
-  useEffect(() => {
-    const indexAtual = verifyingIndex();
-    if (!indexAtual && indexAtual !== 0) return;
+  function setCurrentQuestion() {
+    const customQuestionIndex = indexQuestion(); // indexQuestion tem index 0 por padrão
+    if (customQuestionIndex) setQuestion(customQuestionIndex);
+  }
 
-    const customQuestionIndex = indexQuestion(indexAtual); // indexQuestion tem index 0 por padrão
+  useEffect(() => {
+    const customQuestionIndex = indexQuestion(); // indexQuestion tem index 0 por padrão
 
     if (customQuestionIndex) setQuestion(customQuestionIndex);
 
     // eslint-disable-next-line
   }, []);
 
+  const indexAtual = verifyingIndex();
+
+  // Verificar se é o ultimo index das questões
+  useEffect(() => {
+    if (!indexAtual && indexAtual !== 0) return;
+    if (!newListQuestion[indexAtual + 1]) {
+      setIsFinished(true);
+      return;
+    } else {
+      setIsFinished(false);
+    }
+  }, [indexAtual, newListQuestion]);
+
   async function startQuestion(amount: number) {
     await api(`api.php?amount=${amount}&type=multiple`).then((res) => {
       setFetchQuestions(res.data.results);
     });
 
-    const customQuestionIndex = indexQuestion(); // indexQuestion tem index 0 por padrão
+    const customQuestionIndex = await indexQuestion(); // indexQuestion tem index 0 por padrão
     if (customQuestionIndex) setQuestion(customQuestionIndex);
   }
 
-  function verifyingIndex() {
+  function verifyingIndex(custom: number = 0) {
     //Previnir inexistencia de newListQuestion
     if (newListQuestion.length === 0) return;
 
+    // setIsFinished(false);
+
     // Verificando index Atual
     const indexQuestion = newListQuestion.indexOf(question);
-    // console.log(question, newListQuestion);
+
     return indexQuestion;
   }
 
   function nextQuestion() {
     const indexAtual = verifyingIndex();
 
-    if (!indexAtual && indexAtual !== 0) return;
+    if (indexAtual === undefined) return;
 
     // Setando Nova Questão pelo index.
     const thisQuestion = indexQuestion(indexAtual + 1);
@@ -150,7 +167,7 @@ export function QuestionProvider({ children }: QuestionProviderProps) {
 
   function previousQuestion() {
     const indexAtual = verifyingIndex();
-    if (!indexAtual && indexAtual !== 0) return;
+    if (indexAtual === undefined) return;
 
     // Setando Nova Questão pelo index.
     const newQuestion = indexQuestion(indexAtual - 1);
@@ -204,10 +221,13 @@ export function QuestionProvider({ children }: QuestionProviderProps) {
     <QuestionsContext.Provider
       value={{
         question,
+        newListQuestion,
+        isFinished,
         previousQuestion,
         nextQuestion,
         startQuestion,
         setSelected,
+        setCurrentQuestion,
       }}
     >
       {children}

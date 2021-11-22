@@ -8,11 +8,11 @@ interface BoxStyledProps {
 
 export const BoxStyled = styled.div<BoxStyledProps>`
 color: var(--colorContainer);
-	width: 200px;
-	height: 200px;
+	width: 180px;
+	height: 180px;
   border-radius: 10px;
   background-color: ${({backgroundColor})=> backgroundColor};
-  font-size: 4rem;
+  font-size: 3.5rem;
   font-weight: 700;
   display: flex;
   justify-content: center;

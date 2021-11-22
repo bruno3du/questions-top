@@ -3,14 +3,27 @@
 import { useQuestion } from "../../context/QuestionsContext";
 import Options from "../Options";
 
-export default function Answers() {
-  const { question } = useQuestion();
-  const answers = question.options;
+interface AnswersType {
+  text: string;
+  isSelect: boolean;
+  isCorrect: boolean;
+  id: number;
+}
+
+interface AnswersProps {
+  answers: AnswersType[];
+  isSelectable?: boolean;
+  showCorrectAnswer?: boolean;
+}
+
+export default function Answers({ answers, isSelectable, showCorrectAnswer }: AnswersProps) {
   const { setSelected } = useQuestion();
 
   // Selecionando Resposta
   function handleSetSelected(id: number) {
-    setSelected(id);
+    if (isSelectable) {
+      setSelected(id);
+    }
   }
 
   return (
@@ -24,6 +37,8 @@ export default function Answers() {
             onHandleClick={() => {
               handleSetSelected(answer.id);
             }}
+            isCorrect={answer.isCorrect}
+            showCorrectAnswer={showCorrectAnswer}
           >
             {answer.text}
           </Options>

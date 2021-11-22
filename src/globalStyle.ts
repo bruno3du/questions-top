@@ -1,6 +1,6 @@
 /** @format */
 
-import { createGlobalStyle } from 'styled-components';
+import { createGlobalStyle } from "styled-components";
 
 export const StyledGlobal = createGlobalStyle`
  :root {
@@ -25,6 +25,10 @@ html {
   @media (max-width: 760px) {
     font-size: 87.5%
   }
+}
+
+a {
+  text-decoration: none;
 }
 
 body{

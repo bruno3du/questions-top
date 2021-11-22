@@ -5,13 +5,16 @@ import { Link } from "react-router-dom";
 import Button from "../../components/Button";
 import Container from "../../components/Container";
 import Header from "../../components/Header";
+import { useQuestion } from "../../context/QuestionsContext";
 import { ConfirmarStyled } from "./styles";
 
 export default function Confirmar() {
   const amountQuestion = useParams();
   const navigate = useNavigate();
+  const { setCurrentQuestion } = useQuestion();
 
-   function handleStart() {
+  async function handleStart() {
+    await setCurrentQuestion();
     navigate("/questao");
   }
 
