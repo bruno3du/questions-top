@@ -16,8 +16,18 @@ interface AnswersProps {
   showCorrectAnswer?: boolean;
 }
 
-export default function Answers({ answers, isSelectable, showCorrectAnswer }: AnswersProps) {
+export default function Answers({
+  answers,
+  isSelectable,
+  showCorrectAnswer,
+}: AnswersProps) {
   const { setSelected } = useQuestion();
+
+  function convertText(answer: string) {
+    const aspas = answer.replace(/&quot;/g, '"');
+    const newText = aspas && aspas.replace(/&#039;/g, "'");
+    return newText;
+  }
 
   // Selecionando Resposta
   function handleSetSelected(id: number) {
@@ -40,7 +50,7 @@ export default function Answers({ answers, isSelectable, showCorrectAnswer }: An
             isCorrect={answer.isCorrect}
             showCorrectAnswer={showCorrectAnswer}
           >
-            {answer.text}
+            {convertText(answer.text)}
           </Options>
         ))}
     </div>

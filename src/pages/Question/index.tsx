@@ -13,6 +13,8 @@ export default function Question() {
   const { previousQuestion, nextQuestion, isFinished } = useQuestion();
   const { question } = useQuestion();
   const navigate = useNavigate();
+  const aspas = question.question.replace(/&quot;/g, '"');
+  const newText = aspas && aspas.replace(/&#039;/g, "'");
 
   function handlePreviousQuestion() {
     previousQuestion();
@@ -30,9 +32,9 @@ export default function Question() {
       <Header />
       <Container>
         <h2>{question.category} </h2>
-        <p>{question.question}</p>
+        <p>{newText}</p>
 
-        <Answers answers={question.options} isSelectable/>
+        <Answers answers={question.options} isSelectable />
 
         <ButtonPosition>
           <Button
