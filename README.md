@@ -2,7 +2,7 @@
 
 Que tal brincarmos com um quiz?
 
-Esse Quiz, tem uma dinamica diferenciado das tradicionais, isso porque, é você quem decide quantas perguntas deseja responder, e ao final você tem o resultado de a certos e erros, como qualquer outro não é? Mas e se você pudesse ver quais acertaram e erraram, esse é o diferencial deste projeto, você poderá revizer todas as perguntas e respostas na tela de resultado.
+Esse Quiz, tem uma dinamica diferenciado das tradicionais, isso porque, é você quem decide quantas perguntas deseja responder, e ao final você tem o resultado de a certos e erros, como qualquer outro não é? Mas e se você pudesse ver quais acertaram e erraram, esse é o diferencial deste projeto, você poderá revisar todas as perguntas e respostas na tela de resultado.
 
 
 Link do site: https://questions-top.netlify.app/
